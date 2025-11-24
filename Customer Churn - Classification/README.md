@@ -1,7 +1,6 @@
 ## Project Overview
 
-In this project, we work with the client dataset from a fictional bank. Our goal is to predict which clients have left the bank (i.e. churned) and which remained, using data such as
-credit score, location, tenure duration, account balance and etc. This allows the bank to implement retention programs targeted to clients with higher risk of leaving.
+In this project, we work with the client dataset from a fictional bank. Our goal is to predict which clients have left the bank (i.e. churned) and which remained, using data such as credit score, location, tenure duration, account balance and etc. This allows the bank to implement retention programs targeted to clients with higher risk of leaving.
 
 The dataset contains the following columns:
 
@@ -27,10 +26,13 @@ The dataset contains the following columns:
 
 ### Pre-processing
 
-In this session, we standardize column names and string entries, setting them all to lowercase and removing blank spaces. We drop the 'Customer Id' and 'Surname' columns, since
-they are not relevant for machine learning algorithms. We check if there are any missing values in the dataset that may need to be handled, which is not the case. Lastly, we convert
-all categorical variables to the 'category' type. We also convert discrete integer variables, such as 'Exited', 'Complained, and 'Satisfaction Score', to categorical as well.
+In this session, we standardize column names and string entries, setting them all to lowercase and removing blank spaces. We drop the 'Customer Id' and 'Surname' columns, since they are not relevant for machine learning algorithms. We check if there are any missing values in the dataset that may need to be handled, which is not the case. We also see there are no duplicated rows. Lastly, we convert all categorical variables to the 'category' type. We also convert discrete integer variables, such as 'Exited', 'Complained, and 'Satisfaction Score', to categorical as well.
 
 ### Exploratory Data Analysis
 
-We sistematically analyse the dataset to understand its main characteristics and relations between features.
+We analyse the dataset to understand its main characteristics and relations between features. Firstly, we begin by plotting frequency plots (for categorical variables), histograms and box plots (for numerical variables), to understand the variability in our data. This analysis allows for some conclusions:
+
+- **Credit Score** (Mean: 650.53, Median: 652.0, Skewness: -0.07, Standard Deviation: 96.65) has a nearly normal distribution, which is confirmed by the low skewness. We see there are a few outliers with low credit score, which could be an indicator for churning. The only transformation required for this feature is scaling/standardizing.
+- **Age** (Mean: 38.92, Median: 37.0, Skewness: 1.01, Standard Deviation: 10.48) has a highly skewed distribution, showing the client dataset tends towards younger customers between 30 and 40 years old. There could be a relation between age and churning, with younger clients having a larger tendency to exit the bank. It is necessary to apply a logarithmic transformation to the data before standardizing, to reduce skewness.
+- **Tenure** (Mean: 5.01, Median: 5.0, Skewness: 0.01, Standard Deviation: 2.89) is uniformally distributed, showing even spread among the possible values. It is necessary only to standardize the data.
+- **Balance** (Mean: 76485.89, Median: 97198.54, Skewness: -0.14, Standard Deviation: 62397.40) shows a huge peak at zero, showing many accounts have a null balance. This could be a huge predictor of churning, since it points to clients that do not use their account. The amount of zero-balanced accounts reduce the mean and create a discrepancy between the mean and the median. 
