@@ -67,7 +67,7 @@ Now, it is possible to conduct a bivariate analysis, focusing on how related are
 - **Number of Products**: while clients owning 2 products has a lower churning rate than customers owning only 1 product (0.07 versus 0.28, respectively), clients owning more than 2 products have very high chances of churning; the churning rate for clients owning 3 products is 0.83, and it increases to 1 for clients who own 4 products. This variable holds high predictive power for churning likelihood.
 - **Has Credit Card**: while this may seem a highly important feature at first glance, the churning rate for clients who own a credit card is very close to the churning rate for clients who do not own a credit card (0.202 versus 0.208, respectively). This is not a relevant feature for churning prediction.
 - **Is Active Member**: the churning rate for active members is 0.14, while for non-active users it is 0.27. This is an important feature.
-- **Complain**: the churning rate for clients who have complained is 1. Therefore, every client who churned has complained before leaving the bank. While this variable holds extreme predictive power, it can be hurtful to our model due to the introduction of separation. This is highly problematic for logistic regression models, which we will test in the last section. To avoid statistical instabilities due to this correlation, we will need to apply Lasso or Ridge regularization at our ML models.
+- **Complain**: the churning rate for clients who have complained is 1. Therefore, every client who churned has complained before leaving the bank. While this variable holds extreme predictive power, it can be hurtful to our model due to the introduction of separation. This is highly problematic for logistic regression models, which we will test in the last section. To avoid statistical instabilities due to this correlation, we will train models both including and excluding this variable, in our Model Selection section.
 - **Satisfaction Score**: the churning rate is almost the same for all values of satisfaction score. Therefore, it is not a relevant feature for our analysis.
 - **Card type**: all categories of card types showed uniform churning rates, and therefore this is not a relevant variable. This could be expected, since Card Types are often related to the client's Balance (a higher Balance leads to more important card types). Once the Balance feature does not hold predictive power, it is compreehensible the Card Type variable also doesn't.
 
@@ -77,4 +77,12 @@ This relation can also be studied by plotting the number of products owned categ
 
 ### Data Processing
 
-Now, we apply the insigths obtained above to the data. Firstly, we apply a logarithmic transformation to Age, due to its imbalanced distribution. We check the transformation, and see the skewness of the logarithmic distribution of age is now 0.18. Therefore, we have achieved our goal to normalize this variable.
+Now, we apply the insigths obtained above to the data. Firstly, we apply a logarithmic transformation to Age, due to its imbalanced distribution. We check the transformation, and see the skewness of the logarithmic distribution of age is now 0.18. Therefore, we have achieved our goal to normalize this variable. Then, we apply one-hot encoding to the 'Geography' and 'Gender' variables, and split the data into training and testing sets. We make sure to stratify the groups by 'Exited', since there is an overrepresentation of customers who did not churn in the dataset. Therefore, stratification will guarantee both groups have equal fractions of clients who did churn. Lastly, we standardize our data, as to avoid problems caused by the different scales between features.
+
+## Model Selection
+
+In this section, we begin training our models and evaluating their perfomance. While accuracy would be the first choice to evaluate a classification algorithm, it is not indicated for this case, where we have an imbalance in the target value distribution. Instead, we will use precision, recall and f1-score to identify the best models. The models trained were:
+
+- *Logistic Regression*, with a small grid search testing Ridge regularizations with some values of C. We apply regularization as to avoid overfitting to the 'Complain' variable.  
+
+
