@@ -85,9 +85,9 @@ In this section, we begin training our models and evaluating their perfomance. W
 
 The models trained were:
 
-- *Logistic Regression*, with a small grid search testing Ridge regularizations with some values of C. We apply regularization as to avoid overfitting to the 'Complain' variable. F1-score of this model is 0.998654.
-- *Decision Tree Classifier*, also with a small grid search testing the minimum number of samples in a leaf. F1-score of 0.999013.
-- *Random Forest Classifier*, testing the number of trees and the minimum number of samples in a leaf. F1-score of 0.999013.
+- *Logistic Regression*, with a small grid search testing Ridge regularizations with some values of C. We apply regularization as to avoid overfitting to the 'Complain' variable. F1-score of this model is 0.998834.
+- *Decision Tree Classifier*, also with a small grid search testing the minimum number of samples in a leaf. F1-score of 0.999103.
+- *Random Forest Classifier*, testing the number of trees and the minimum number of samples in a leaf. F1-score of 0.999103.
 - *SVC* with a Ridge regularization, testing some values of C. F1-score of 0.997581.
 - *Ada Boosting Classifier*, using Decision Trees. We do a small grid search for the number of trees and the learning rate. F1-score of 0.999.
 - *Gradient Boosting Classifier* with small grid search for the number of estimators and the learning rate. F1-score of 0.999.
@@ -98,13 +98,13 @@ We notice our models present great predictive power, with a really high f1-score
 
 So, we re-train our models without the Complain variable, to understand how our algorithms would work without this information. The results were:
 
--*Logistic Regression* produced a f1-score of 0.711252.
--*Decision Tree Classifier* produced a f1-score of 0.848126.
--*Random Forest Classifier* produced a f1-score of 0.794605.
--*SVC* produced a f1-score of 0.72548.
--*Ada Boosting Classifier* produced a f1-score of 0.8424.
--*Gradient Boosting Classifier* produced a f1-score of 0.8722.
+-*Logistic Regression* produced a f1-score of 0.709803.
+-*Decision Tree Classifier* produced a f1-score of 0.856745.
+-*Random Forest Classifier* produced a f1-score of 0.852764.
+-*SVC* produced a f1-score of 0.725223.
+-*Ada Boosting Classifier* produced a f1-score of 0.831.
+-*Gradient Boosting Classifier* produced a f1-score of 0.8619.
 
-As expected, the f1-scores of our models have been greatly reduced by removing the Complain variable. In a real-life situation, it would be interesting to gather more data, specially focusing on clients who churned without complaing or complained without churning, as to increase our models capabilities. The Gradient Boosting Classifier is the best model for this case, and generates a f1-score of 0.895 in the test set. Therefore, we see there is no overfitting to the training data.
+As expected, the f1-scores of our models have been greatly reduced by removing the Complain variable. In a real-life situation, it would be interesting to gather more data, specially focusing on clients who churned without complaing or complained without churning, as to increase our models capabilities. The Gradient Boosting Classifier is the best model for this case, and generates a f1-score of 0.8796 in the test set. Therefore, we see there is no overfitting to the training data.
 
 
