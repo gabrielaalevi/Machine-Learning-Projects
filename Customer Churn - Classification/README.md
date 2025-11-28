@@ -77,12 +77,34 @@ This relation can also be studied by plotting the number of products owned categ
 
 ### Data Processing
 
-Now, we apply the insigths obtained above to the data. Firstly, we apply a logarithmic transformation to Age, due to its imbalanced distribution. We check the transformation, and see the skewness of the logarithmic distribution of age is now 0.18. Therefore, we have achieved our goal to normalize this variable. Then, we apply one-hot encoding to the 'Geography' and 'Gender' variables, and split the data into training and testing sets. We make sure to stratify the groups by 'Exited', since there is an overrepresentation of customers who did not churn in the dataset. Therefore, stratification will guarantee both groups have equal fractions of clients who did churn. Lastly, we standardize our data, as to avoid problems caused by the different scales between features.
+Now, we apply the insigths obtained above to the data. Firstly, we apply a logarithmic transformation to Age, due to its imbalanced distribution. We check the transformation, and see the skewness of the logarithmic distribution of age is now 0.18. Therefore, we have achieved our goal to normalize this variable. Then, we apply one-hot encoding to the 'Geography' and 'Gender' variables, and split the data into training and testing sets. We make sure to stratify the groups by 'Exited', since there is an overrepresentation of customers who did not churn in the dataset. Therefore, stratification will guarantee both groups have equal fractions of clients who did churn. However, this may not be enough to balance our dataset. So, we also apply a SMOTE oversampling technique, that will replicate random examples from the minority class (in this case, clients that churned). Now, we are sure our dataset is balanced between both categories. Lastly, we standardize our data, as to avoid problems caused by the different scales between features.
 
 ## Model Selection
 
-In this section, we begin training our models and evaluating their perfomance. While accuracy would be the first choice to evaluate a classification algorithm, it is not indicated for this case, where we have an imbalance in the target value distribution. Instead, we will use precision, recall and f1-score to identify the best models. The models trained were:
+In this section, we begin training our models and evaluating their perfomance. While accuracy would be the first choice to evaluate a classification algorithm, it is not indicated for this case, where we have an imbalance in the target value distribution. Instead, it is necessary to employ other metrics, such as precision and recall. For this example, a high recall but low precision means the model will emphasize correctly predicting which customers will NOT churn, at cost of letting clients who will churn pass unoticed. We will not lose money by giving benefits to customers who will not churn, but we may lose clients that were not flagged by the model as potential churners. On the other hand, a high precision but low recall will emphasize correctly predicting which customers WILL churn, on the expanse of labeling as potential churners some clients that would remain in the service anyway. Therefore, we may lose money by giving benefits and discounts to clients who would not leave the service regardless. In real life, it is possible executives will rather one situation or the other, in which case a specific metric would be preferable. However, to be more neutral in our analysis, we evaluate models using their f1-score, as to balance the precision/recall tradeoff.
 
-- *Logistic Regression*, with a small grid search testing Ridge regularizations with some values of C. We apply regularization as to avoid overfitting to the 'Complain' variable.  
+The models trained were:
+
+- *Logistic Regression*, with a small grid search testing Ridge regularizations with some values of C. We apply regularization as to avoid overfitting to the 'Complain' variable. F1-score of this model is 0.998654.
+- *Decision Tree Classifier*, also with a small grid search testing the minimum number of samples in a leaf. F1-score of 0.999013.
+- *Random Forest Classifier*, testing the number of trees and the minimum number of samples in a leaf. F1-score of 0.999013.
+- *SVC* with a Ridge regularization, testing some values of C. F1-score of 0.997581.
+- *Ada Boosting Classifier*, using Decision Trees. We do a small grid search for the number of trees and the learning rate. F1-score of 0.999.
+- *Gradient Boosting Classifier* with small grid search for the number of estimators and the learning rate. F1-score of 0.999.
+
+The best models are the Decision Tree Classifier and the Random Forest Classifier. We pick both and test them in our testing dataset. Both models generated f1-score of 0.9992, which highlights they are not overfitting to the training data.
+
+We notice our models present great predictive power, with a really high f1-score for all instances. Once the Complain variable has an almost perfect correlation with the Exited variable, it could be expected that the models would do really well on this. However, it is possible our models are relying to much on the Complain feature, and not flagging clients who churned without complaining, or clients who complained but remained.
+
+So, we re-train our models without the Complain variable, to understand how our algorithms would work without this information. The results were:
+
+-*Logistic Regression* produced a f1-score of 0.711252.
+-*Decision Tree Classifier* produced a f1-score of 0.848126.
+-*Random Forest Classifier* produced a f1-score of 0.794605.
+-*SVC* produced a f1-score of 0.72548.
+-*Ada Boosting Classifier* produced a f1-score of 0.8424.
+-*Gradient Boosting Classifier* produced a f1-score of 0.8722.
+
+As expected, the f1-scores of our models have been greatly reduced by removing the Complain variable. In a real-life situation, it would be interesting to gather more data, specially focusing on clients who churned without complaing or complained without churning, as to increase our models capabilities. The Gradient Boosting Classifier is the best model for this case, and generates a f1-score of 0.895 in the test set. Therefore, we see there is no overfitting to the training data.
 
 
