@@ -99,11 +99,17 @@ We notice our models present great predictive power, with a really high f1-score
 So, we re-train our models without the Complain variable, to understand how our algorithms would work without this information. The results were:
 
 -*Logistic Regression* produced a f1-score of 0.709803.
+
 -*Decision Tree Classifier* produced a f1-score of 0.856745.
+
 -*Random Forest Classifier* produced a f1-score of 0.852764.
+
 -*SVC* produced a f1-score of 0.725223.
+
 -*Ada Boosting Classifier* produced a f1-score of 0.831.
+
 -*Gradient Boosting Classifier* produced a f1-score of 0.8619.
+
 
 As expected, the f1-scores of our models have been greatly reduced by removing the Complain variable. In a real-life situation, it would be interesting to gather more data, specially focusing on clients who churned without complaing or complained without churning, as to increase our models capabilities. The Gradient Boosting Classifier is the best model for this case, and generates a f1-score of 0.8796 in the test set. Therefore, we see there is no overfitting to the training data.
 
