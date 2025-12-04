@@ -35,7 +35,7 @@ We follow by performing an univariate analysis, to understand how our variables 
 - **Stress Levels** (Mean: 6.61, Median: 7, Standard Deviation: 1.54, Skewness: -0.09) also follows an almost normal distribution, but with a slightly longer left tail caused by an outlier that described their stress levels as 2. There is no need for transformations in this column.
 - **Days without Social Media** (Mean: 3.13, Median: 3, Standard Deviation: 1.85, Skewness: 0.079) has a right-skewed normal distribution, with the left tail larger than the right one. While this is not ideal, we will not implement any transformation for this variable.
 - **Exercise Frequency** (Mean: 2.45, Median: 2, Standard Deviation: 1.42, Skewness: 0.23) has a right-skewed distribution. However, attempting to apply a square-root transformation or a log1p transformation actually increases the skewness of this variable, therefore we choose to not apply any transformation.
-- **Happiness Index** (Mean: 8.37, Median: 9, Standard Deviation: 1.52, Skewness: -0.68) has a highly left-skewed distribution. In this case, we will apply a logarithmic transformation to normalize this distribution.
+- **Happiness Index** (Mean: 8.37, Median: 9, Standard Deviation: 1.52, Skewness: -0.68) has a highly left-skewed distribution. In this case, we will use a SMOTE technique to oversample the dataset.
 - **Gender** has an almost even distribution between Male and Female, with a small number of participants identifying as Other.
 - **Social Media Platform** has uniform results for all the platforms analysed.
 
@@ -52,17 +52,19 @@ Next, we compare happiness levels between our categorical features:
 - **Gender** does not seem to affect the happiness index distribution greatly. We see a similar pattern for all 3 options.
 - **Social Media Platform** also has a similar pattern for all the options considered. At first, we see there is a great difference between the number of participants with a 10 happiness index between platforms. However, when we compare the percentages they possess in the dataset, we notice that platforms with more users in the dataset have higher counts of high happiness index. Once this is a count plot, it is expected that platforms with more users in the dataset will present higher counts. With this information in mind, it does not seem the social media platform of preference affects the participants happiness index significantly.
 
+Using a correlation heat map, we see the variables that are the most correlated to Happiness Index are Stress Level, Sleep Quality and Daily Screen Time. As mentioned previously, we also notice these 3 features are also well correlated among themselves. This should be expected, since research show that high screen time can increase stress levels and reduce sleep quality, while high stress levels can also worsen sleep. Therefore, it is interesting to do a multivariate analysis to see these relations. The analysis confirms our hypothesis: lower values of daily screen time correlate to lower levels of stress, and higher Happiness Index values; high values of daily screen time correlate with low sleep quality and lower happiness levels; high stress levels correlate to lower sleep quality and lower happiness ratings.
 
+In face of the information above, we have some variables that may not be relevant for our analysis: age, gender, social media platform and days without social media. While exercise frequency has a low correlation with the happiness index, we still see a trend with people that exercise more than 3 times a week are happier than those that exercise less. We will keep this feature in our dataset for now, and maybe later train models without it to check its impact on performance. To better understand which variables are better to drop from the data, we do a multivariate analysis with Happiness Index and the variables we do intend to keep (stress level, sleep quality and daily screen time). This would allow us to see if, for example, younger women tend to have lower happiness levels.
 
-
+For social media platform, age and days without social media, there was no substantial correlation with the other variables. Therefore, it is safe to affirm these variables are not good predictors and will be dropped of our data. However, the gender variable carries some interesting information. For participants who execise more than 3 times a week, women tend to have significantly higher happiness levels than men. Hence, we keep this column. 
 
 ### Label Encoding
 
-We encode the 'gender' and 'social media platform' features using one-hot encoding, so our machine learning model can employ them.
+We encode the 'gender' feature using one-hot encoding.
 
 ### Data Split
 
-We split the data into training and testing sets. In the EDA session, we saw the happiness index column presents more high satisfaction values than lower satisfation instances. This could be a problem for our model, since it is possible the training set could have very few instances with low life satisfaction, and therefore our model would be biased to predict higher values for happiness index. So, we stratify our sets by happiness index, to guarantee each set has around the same proportion of lower happiness levels.
+In this section, we split our data into training and testing sets. In the EDA session, we noticed our dataset presents more high happiness index values than lower instances. This could lead to an overrepresentation bias in our models. Hence, we use a SMOTE technique to oversample the dataset and guarantee we will have equal proportions of each index present. We also stratify our training and testing sets by happiness index, so both of them will have an equal amount of each happiness level value.
 
 All the numerical features we employ in the model range between 1 and 10, therefore there is no need to scale our data.
 
@@ -70,15 +72,15 @@ All the numerical features we employ in the model range between 1 and 10, theref
 
 Finally, we train our models. We employ RMSE and NRMSE to evaluate our models, since this is the best metric for regression problems without outliers. We also employ cross-validation for all models, and grid search to fine tune some hyperparameters. The models trained are:
 
-- Linear Regression: RMSE of 0.9666.
-- Linear Regression with Ridge Regularization: RMSE of 0.9664.
-- Linear Regression with Lasso Regularization: RMSE of 0.9559.
-- Decision Tree Regressor: RMSE of 1.0449.
-- Random Forest Regressor: RMSE of 0.9645.
-- Gradient Boosting Regressor: RMSE of 0.955.
+- Linear Regression: RMSE of 0.9581.
+- Linear Regression with Ridge Regularization: RMSE of 0.9579.
+- Linear Regression with Lasso Regularization: RMSE of 0.9557.
+- Decision Tree Regressor: RMSE of 0.9965.
+- Random Forest Regressor: RMSE of 0.9507.
+- Gradient Boosting Regressor: RMSE of 0.9584.
 
-Therefore, we see Gradient Boosting Regressor was the best model in the training set. 
+Therefore, we see the Random Forest Regressor was the best model in the training set. 
 
 ### Hyperparameter fine-tuning
 
-The grid search done in the previous session showed the best hyperparameters for the Gradient Boosting Regressor. Now, we do another grid search for values close to the ones selected in the previous session, to fine-tune the model. With this, we reduce the RMSE in the training test to 0.9546. Finally, we use this model to make predictions in the test set, and achieve a RMSE of 0.8999. The model has a better performance in the test set, therefore we do not need to worry about overfitting.
+In the previous section, we did a small grid search for the best parameters for each model, in order to find the most effective one. Now, we do another grid search for values close to the ones selected previously, to fine-tune the model. With this, we reduce the RMSE in the training test to 0.9503. Finally, we use this model to make predictions in the test set, and achieve a RMSE of 0.8953. The model has a better performance in the test set, therefore we do not need to worry about overfitting.
